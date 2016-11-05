@@ -212,7 +212,7 @@ void ofxKuRectRender::pushRect( const ofPoint &p1, const ofPoint &p2, const ofPo
     texs[N++] = texRect.getTopLeft();
     points[N] = p2;
     texs[N++] = texRect.getTopRight();
-    points[N] = p3);
+    points[N] = p3;
     texs[N++] = texRect.getBottomRight();
     points[N] = p4;
     texs[N++] = texRect.getBottomLeft();     
