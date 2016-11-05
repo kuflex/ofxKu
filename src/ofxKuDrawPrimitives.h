@@ -65,7 +65,9 @@ void ofxKuEndSmoothing();
 
 class ofxKuLineRender {
 public:
+	ofxKuLineRender();
 	void clear();
+	void start();	//starts drawing, not clear
 	void allocate_colored(int n);
 	void allocate_textured(int n);
 	void allocate_colored_textured(int n);
@@ -79,6 +81,14 @@ public:
                 const ofColor &color2 );
 	void pushLine( vector<ofPoint> &points, vector<ofColor> &colors );
 
+	vector<ofPoint> points;
+	vector<ofColor> colors;
+	vector<ofVec2f> texs;
+	int N;
+private:
+	void check_size_colored();
+	void check_size_textured();
+	void check_size_colored_textured();
 };
 
 

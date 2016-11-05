@@ -274,74 +274,142 @@ void kuEndSmoothing(){
     glDisable(GL_LINE_SMOOTH);
 }
 
+
+
 //--------------------------------------------------------------
-//цветные линии
-void kuPushLine( const ofPoint &p1, const ofPoint &p2, const ofColor &color,
-                vector<ofPoint> &points, vector<ofColor> &colors )
-{
-    points.push_back( p1 );
-    points.push_back( p2 );
-    
-    colors.push_back( color );
-    colors.push_back( color );
-}
-
-
-void kuPushLine( const ofPoint &p1, const ofPoint &p2,
-                const ofColor &color1, const ofColor &color2,
-                vector<ofPoint> &points, vector<ofColor> &colors )
-{
-    points.push_back( p1 );
-    points.push_back( p2 );
-    
-    colors.push_back( color1 );
-    colors.push_back( color2 );
+ofxKuLineRender::ofxKuLineRender() {
+	N = 0;
 }
 
 //--------------------------------------------------------------
-void kuDrawLines( vector<ofPoint> &points, vector<ofColor> &colors )
-{
-    if ( points.empty() ) { return; }
+void ofxKuLineRender::clear() {
+	N = 0;
+	points.clear();
+	colors.clear();
+	texs.clear();
+}
 
-    kuStartSmoothing();     //включаем сглаживание
-    
+//--------------------------------------------------------------
+void ofxKuLineRender::start() {	//starts drawing, not clear
+	N = 0;
+}
+
+//--------------------------------------------------------------
+void ofxKuLineRender::allocate_colored(int n) {
+	points.resize(n*2);
+	colors.resize(n*2);
+}
+
+//--------------------------------------------------------------
+void ofxKuLineRender::allocate_textured(int n) {
+	points.resize(n*4);
+	texs.resize(n*4);
+}
+
+//--------------------------------------------------------------
+void ofxKuLineRender::allocate_colored_textured(int n) {
+	points.resize(n*4);
+	colors.resize(n*4);
+	texs.resize(n*4);
+}
+
+//--------------------------------------------------------------
+void ofxKuLineRender::draw_colored() {
+	if ( N == 0 ) { return; }
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     
     glVertexPointer( 3, GL_FLOAT, sizeof( ofPoint ), &points[0].x);
     glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( ofColor ), &colors[0].v[0]);
     
-    glDrawArrays(GL_LINES, 0, points.size());
+    glDrawArrays(GL_LINES, 0, N);
     
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
-    
-    //kuEndSmoothing();       //выключаем сглаживание
-
 }
 
 //--------------------------------------------------------------
-//предполагается, что текстура уже подключена
-void kuDrawLines_textured( vector<ofPoint> &points,
-                          vector<ofVec2f> &texs ) {
-    if ( points.empty() ) { return; }
-    
+void ofxKuLineRender::draw_textured( ofTexture &texture ) {
+	if ( N == 0 ) { return; }
+   
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    
+
     glVertexPointer( 3, GL_FLOAT, sizeof( ofPoint ), &points[0].x);
     glTexCoordPointer( 2, GL_FLOAT, sizeof( ofVec2f ), &texs[0].x );
     
-    //texture.bind();
-    glDrawArrays(GL_LINES, 0, points.size());
-    //texture.unbind();
-    
+    texture.bind();
+    glDrawArrays(GL_LINES, 0, N);
+    texture.unbind();
+		
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 //--------------------------------------------------------------
+void ofxKuLineRender::draw_colored_textured( ofTexture &texture ) {
+	if ( N == 0 ) { return; }
 
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    
+    glVertexPointer( 3, GL_FLOAT, sizeof( ofPoint ), &points[0].x);
+    glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( ofColor ), &colors[0].v[0]);
+    glTexCoordPointer( 2, GL_FLOAT, sizeof( ofVec2f ), &texs[0].x );
+    
+    texture.bind();
+    glDrawArrays(GL_LINES, 0, N);
+    texture.unbind();
+    
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+//-------------------------------------------------------------- 
+void ofxKuLineRender::check_size_colored() {
+	if (points.size() < N+2) points.resize(N+2);
+	if (colors.size() < N+2) colors.resize(N+2);
+}
+
+//-------------------------------------------------------------- 
+void ofxKuLineRender::check_size_textured() {
+	if (points.size() < N+2) points.resize(N+2);
+	if (texs.size() < N+2) texs.resize(N+2);
+
+}
+
+//-------------------------------------------------------------- 
+void ofxKuLineRender::check_size_colored_textured() {
+	if (points.size() < N+2) points.resize(N+2);
+	if (colors.size() < N+2) colors.resize(N+2);
+	if (texs.size() < N+2) texs.resize(N+2);
+}
+
+//--------------------------------------------------------------
+void ofxKuLineRender::pushLine( const ofPoint &p1, const ofPoint &p2, const ofColor &color )
+{
+ 	check_size_colored();
+    points[N] = p1;
+    colors[N++] = color;
+    points[N] = p2;
+    colors[N++] = color;
+}
+
+
+//--------------------------------------------------------------
+void ofxKuLineRender::pushLine( const ofPoint &p1, const ofPoint &p2,
+                const ofColor &color1, const ofColor &color2 )
+{
+ 	check_size_colored();
+    points[N] = p1;
+    colors[N++] = color1;
+    points[N] = p2;
+    colors[N++] = color2;
+}
+
+//--------------------------------------------------------------
 void ofxKuVertexRender::setup( string pointImageFile, string shaderVert, string shaderFrag )
 {
     ofDisableArbTex();
