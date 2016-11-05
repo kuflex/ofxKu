@@ -15,6 +15,7 @@ float sqr( float x );
 //--------------------------------------------------------------
 
 class ofxKuRectRender {
+public:
 	ofxKuRectRender();
 	void clear();
 	void start();	//starts drawing, not clear
@@ -63,6 +64,7 @@ void ofxKuStartSmoothing();    //Line smoothing
 void ofxKuEndSmoothing();
 
 class ofxKuLineRender {
+public:
 	void clear();
 	void allocate_colored(int n);
 	void allocate_textured(int n);
