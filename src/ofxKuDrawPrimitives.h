@@ -17,6 +17,9 @@ float sqr( float x );
 class ofxKuRectRender {
 public:
 	ofxKuRectRender();
+
+	bool normals_enabled;	//set to true for using normals
+
 	void clear();
 	void start();	//starts drawing, not clear
 	void allocate_colored(int n);		//do allocate is size is known, and use start
@@ -53,10 +56,21 @@ public:
 	vector<ofVec2f> texs;
 	int N;
 
+
+	//Normals are controlled separately
+	vector<ofPoint> normals;
+	void pushNormals( const ofPoint &norm );
+
 private:
 	void check_size_colored();
 	void check_size_textured();
 	void check_size_colored_textured();
+
+	void check_size_normals();
+	void link_normals();
+	void unlink_normals();
+	void allocate_normals(int n);
+	int N_normals;
 };
 
 
@@ -66,6 +80,8 @@ void ofxKuEndSmoothing();
 class ofxKuLineRender {
 public:
 	ofxKuLineRender();
+	bool normals_enabled;	//set to true for using normals
+
 	void clear();
 	void start();	//starts drawing, not clear
 	void allocate_colored(int n);
@@ -85,10 +101,22 @@ public:
 	vector<ofColor> colors;
 	vector<ofVec2f> texs;
 	int N;
+
+	//Normals are controlled separately
+	vector<ofPoint> normals;
+	void pushNormals( const ofPoint &norm );
+	void pushNormals( const ofPoint &norm1, const ofPoint &norm2 );
 private:
 	void check_size_colored();
 	void check_size_textured();
 	void check_size_colored_textured();
+
+	void check_size_normals();
+	void link_normals();
+	void unlink_normals();
+	void allocate_normals(int n);
+	int N_normals;
+
 };
 
 

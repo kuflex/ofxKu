@@ -1,13 +1,11 @@
 ﻿#include "ofxKuDrawPrimitives.h"
 
 //--------------------------------------------------------------
-//огрубление с шагом size
 float coarse( float x, float size ) {
     return int( x / size + 0.5 ) * size;
 }
 
 //--------------------------------------------------------------
-//1, -1 равновероятно
 int randomSign() {
     return ( ofRandom( 0, 1 ) < 0.5 ) ? 1 : (-1);
 }
@@ -21,6 +19,8 @@ float sqr( float x ) {
 //--------------------------------------------------------------
 ofxKuRectRender::ofxKuRectRender() {
 	N = 0;
+	N_normals = 0;
+	normals_enabled = false;
 }
 
 //--------------------------------------------------------------
@@ -29,23 +29,36 @@ void ofxKuRectRender::clear() {
 	points.clear();
 	colors.clear();
 	texs.clear();
+
+	N_normals = 0;
+	normals.clear();
 }
 
 //--------------------------------------------------------------
 void ofxKuRectRender::start() {	//starts drawing, not clear
 	N = 0;
+	N_normals = 0;
+}
+
+//--------------------------------------------------------------
+void ofxKuRectRender::allocate_normals(int n) {
+	if (normals_enabled) {
+		normals.resize(n*4);
+	}
 }
 
 //--------------------------------------------------------------
 void ofxKuRectRender::allocate_colored(int n) {
 	points.resize(n*4);
 	colors.resize(n*4);
+	allocate_normals(n);
 }
 
 //--------------------------------------------------------------
 void ofxKuRectRender::allocate_textured(int n) {
 	points.resize(n*4);
 	texs.resize(n*4);
+	allocate_normals(n);
 }
 
 //--------------------------------------------------------------
@@ -53,8 +66,9 @@ void ofxKuRectRender::allocate_colored_textured(int n) {
 	points.resize(n*4);
 	colors.resize(n*4);
 	texs.resize(n*4);
+	allocate_normals(n);
 }
-
+	
 //--------------------------------------------------------------
 void ofxKuRectRender::draw_colored() {
 	if ( N == 0 ) { return; }
@@ -64,7 +78,11 @@ void ofxKuRectRender::draw_colored() {
     glVertexPointer( 3, GL_FLOAT, sizeof( ofPoint ), &points[0].x);
     glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( ofColor ), &colors[0].v[0]);
     
+	link_normals();
+
     glDrawArrays(GL_QUADS, 0, N);
+
+	unlink_normals();
     
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -80,10 +98,14 @@ void ofxKuRectRender::draw_textured( ofTexture &texture ) {
     glVertexPointer( 3, GL_FLOAT, sizeof( ofPoint ), &points[0].x);
     glTexCoordPointer( 2, GL_FLOAT, sizeof( ofVec2f ), &texs[0].x );
     
+	link_normals();
+
     texture.bind();
     glDrawArrays(GL_QUADS, 0, N);
     texture.unbind();
 		
+	unlink_normals();
+
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
@@ -100,13 +122,32 @@ void ofxKuRectRender::draw_colored_textured( ofTexture &texture ) {
     glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( ofColor ), &colors[0].v[0]);
     glTexCoordPointer( 2, GL_FLOAT, sizeof( ofVec2f ), &texs[0].x );
     
+	link_normals();
+
     texture.bind();
     glDrawArrays(GL_QUADS, 0, N);
     texture.unbind();
+
+	unlink_normals();
     
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+//-------------------------------------------------------------- 
+void ofxKuRectRender::link_normals() {
+	if (normals_enabled) {
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glNormalPointer( GL_FLOAT, sizeof( ofPoint ), &normals[0].x );
+	}
+}
+
+//-------------------------------------------------------------- 
+void ofxKuRectRender::unlink_normals() {
+	if (normals_enabled) {
+		glDisableClientState(GL_NORMAL_ARRAY);
+	}
 }
 
 //-------------------------------------------------------------- 
@@ -127,6 +168,21 @@ void ofxKuRectRender::check_size_colored_textured() {
 	if (points.size() < N+4) points.resize(N+4);
 	if (colors.size() < N+4) colors.resize(N+4);
 	if (texs.size() < N+4) texs.resize(N+4);
+}
+
+//-------------------------------------------------------------- 
+void ofxKuRectRender::check_size_normals() {
+	if (normals.size() < N_normals + 4) normals.resize(N_normals+4);
+}
+
+
+//--------------------------------------------------------------
+void ofxKuRectRender::pushNormals( const ofPoint &norm ) {
+	check_size_normals();
+	normals[N_normals++] = norm;
+	normals[N_normals++] = norm;
+	normals[N_normals++] = norm;
+	normals[N_normals++] = norm;
 }
 
 //-------------------------------------------------------------- 
@@ -219,7 +275,6 @@ void ofxKuRectRender::pushRect( const ofPoint &p1, const ofPoint &p2, const ofPo
 }
 
 //--------------------------------------------------------------
-//текстурированные прямоугольники с цветом
 void ofxKuRectRender::pushRect( float x, float y, float z, float w, float h,
                 const ofColor &color, const ofRectangle &texRect )
 {
@@ -279,6 +334,8 @@ void kuEndSmoothing(){
 //--------------------------------------------------------------
 ofxKuLineRender::ofxKuLineRender() {
 	N = 0;
+	N_normals = 0;
+	normals_enabled = false;
 }
 
 //--------------------------------------------------------------
@@ -287,30 +344,44 @@ void ofxKuLineRender::clear() {
 	points.clear();
 	colors.clear();
 	texs.clear();
+
+	N_normals = 0;
+	normals.clear();
 }
 
 //--------------------------------------------------------------
 void ofxKuLineRender::start() {	//starts drawing, not clear
 	N = 0;
+	N_normals = 0;
+}
+
+//--------------------------------------------------------------
+void ofxKuLineRender::allocate_normals(int n) {
+	if (normals_enabled) {
+		normals.resize(n*2);
+	}
 }
 
 //--------------------------------------------------------------
 void ofxKuLineRender::allocate_colored(int n) {
 	points.resize(n*2);
 	colors.resize(n*2);
+	allocate_normals(n);
 }
 
 //--------------------------------------------------------------
 void ofxKuLineRender::allocate_textured(int n) {
-	points.resize(n*4);
-	texs.resize(n*4);
+	points.resize(n*2);
+	texs.resize(n*2);
+	allocate_normals(n);
 }
 
 //--------------------------------------------------------------
 void ofxKuLineRender::allocate_colored_textured(int n) {
-	points.resize(n*4);
-	colors.resize(n*4);
-	texs.resize(n*4);
+	points.resize(n*2);
+	colors.resize(n*2);
+	texs.resize(n*2);
+	allocate_normals(n);
 }
 
 //--------------------------------------------------------------
@@ -322,8 +393,10 @@ void ofxKuLineRender::draw_colored() {
     glVertexPointer( 3, GL_FLOAT, sizeof( ofPoint ), &points[0].x);
     glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( ofColor ), &colors[0].v[0]);
     
-    glDrawArrays(GL_LINES, 0, N);
-    
+	link_normals();
+	glDrawArrays(GL_LINES, 0, N);
+    unlink_normals();
+
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
@@ -339,7 +412,11 @@ void ofxKuLineRender::draw_textured( ofTexture &texture ) {
     glTexCoordPointer( 2, GL_FLOAT, sizeof( ofVec2f ), &texs[0].x );
     
     texture.bind();
-    glDrawArrays(GL_LINES, 0, N);
+
+	link_normals();
+	glDrawArrays(GL_LINES, 0, N);
+    unlink_normals();
+
     texture.unbind();
 		
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -359,12 +436,31 @@ void ofxKuLineRender::draw_colored_textured( ofTexture &texture ) {
     glTexCoordPointer( 2, GL_FLOAT, sizeof( ofVec2f ), &texs[0].x );
     
     texture.bind();
-    glDrawArrays(GL_LINES, 0, N);
+
+	link_normals();
+	glDrawArrays(GL_LINES, 0, N);
+    unlink_normals();
+
     texture.unbind();
     
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+//-------------------------------------------------------------- 
+void ofxKuLineRender::link_normals() {
+	if (normals_enabled) {
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glNormalPointer( GL_FLOAT, sizeof( ofPoint ), &normals[0].x );
+	}
+}
+
+//-------------------------------------------------------------- 
+void ofxKuLineRender::unlink_normals() {
+	if (normals_enabled) {
+		glDisableClientState(GL_NORMAL_ARRAY);
+	}
 }
 
 //-------------------------------------------------------------- 
@@ -386,6 +482,28 @@ void ofxKuLineRender::check_size_colored_textured() {
 	if (colors.size() < N+2) colors.resize(N+2);
 	if (texs.size() < N+2) texs.resize(N+2);
 }
+
+
+//-------------------------------------------------------------- 
+void ofxKuLineRender::check_size_normals() {
+	if (normals.size() < N_normals + 2) normals.resize(N_normals+2);
+}
+
+
+//--------------------------------------------------------------
+void ofxKuLineRender::pushNormals( const ofPoint &norm ) {
+	check_size_normals();
+	normals[N_normals++] = norm;
+	normals[N_normals++] = norm;
+}
+
+//--------------------------------------------------------------
+void ofxKuLineRender::pushNormals( const ofPoint &norm1, const ofPoint &norm2 ) {
+	check_size_normals();
+	normals[N_normals++] = norm1;
+	normals[N_normals++] = norm2;
+}
+
 
 //--------------------------------------------------------------
 void ofxKuLineRender::pushLine( const ofPoint &p1, const ofPoint &p2, const ofColor &color )
