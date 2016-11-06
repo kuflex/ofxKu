@@ -314,7 +314,7 @@ void ofxKuRectRender::pushRect( const ofPoint &p, const ofPoint &w, const ofPoin
 
 
 //----------------------------------------------------------
-void kuStartSmoothing(){
+void ofxKuStartSmoothing(){
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	glEnable(GL_LINE_SMOOTH);
     
@@ -325,7 +325,7 @@ void kuStartSmoothing(){
 
 
 //----------------------------------------------------------
-void kuEndSmoothing(){
+void ofxKuEndSmoothing(){
     glDisable(GL_LINE_SMOOTH);
 }
 
