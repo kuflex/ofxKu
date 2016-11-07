@@ -95,6 +95,8 @@ public:
 	void pushLine( const ofPoint &p1, const ofPoint &p2, const ofColor &color );
 	void pushLine( const ofPoint &p1, const ofPoint &p2, const ofColor &color1,
                 const ofColor &color2 );
+	void pushLine( const ofPoint &p1, const ofPoint &p2,
+                const ofColor &color1, const ofColor &color2, float bright );
 	void pushLine( vector<ofPoint> &points, vector<ofColor> &colors );
 
 	vector<ofPoint> points;

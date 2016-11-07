@@ -528,6 +528,17 @@ void ofxKuLineRender::pushLine( const ofPoint &p1, const ofPoint &p2,
 }
 
 //--------------------------------------------------------------
+void ofxKuLineRender::pushLine( const ofPoint &p1, const ofPoint &p2,
+                const ofColor &color1, const ofColor &color2, float bright )
+{
+ 	check_size_colored();
+    points[N] = p1;
+    colors[N++] = ofColor(color1.r*bright, color1.g*bright, color1.b*bright, color1.a);
+    points[N] = p2;
+    colors[N++] = ofColor(color2.r*bright, color2.g*bright, color2.b*bright, color2.a);
+}
+
+//--------------------------------------------------------------
 void ofxKuVertexRender::setup( string pointImageFile, string shaderVert, string shaderFrag )
 {
     ofDisableArbTex();
