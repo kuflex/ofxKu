@@ -4,8 +4,9 @@
 
 size_t kuFloodFill( vector<unsigned char> &input, int w, int h, int sv,
                  int x0, int y0, int search, int fillColor, vector<int> *outPoints ) {
-    vector<int> res;
-    res.push_back(x0 + w*y0);
+	vector<int> *res = (outPoints)?outPoints:(new vector<int>());
+	res->clear();
+    res->push_back(x0 + w*y0);
     input[x0 + w*y0] = fillColor;
 
 	vector<int> rose(sv);
@@ -22,8 +23,8 @@ size_t kuFloodFill( vector<unsigned char> &input, int w, int h, int sv,
 
 
     size_t begin = 0;
-    while (begin < res.size()) {
-        int p = res[begin];
+    while (begin < res->size()) {
+        int p = (*res)[begin];
         //int px = p%w;
         //int py = p/h;
 
@@ -31,7 +32,7 @@ size_t kuFloodFill( vector<unsigned char> &input, int w, int h, int sv,
 		for (int i=0; i<sv; i++) {
 			int q = p+rose[i];
 			if (q>=0 && q<w*h && input[q] == search) {
-				res.push_back(q);
+				res->push_back(q);
 				input[q] = fillColor;
 			}
 		}
@@ -48,9 +49,9 @@ size_t kuFloodFill( vector<unsigned char> &input, int w, int h, int sv,
             }
         }*/
     }
-
-    if ( outPoints ) { *outPoints = res; }
-    return res.size();
+	int n = res->size();
+    if ( !outPoints ) { delete res; }
+    return n;
 }
 //--------------------------------------------------------------
 
