@@ -2,10 +2,11 @@
 
 //--------------------------------------------------------------
 
-size_t kuFloodFill( vector<unsigned char> &input, int w, int h, int sv,
-                 int x0, int y0, int search, int fillColor, vector<int> *outPoints ) {
+size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
+                 int x0, int y0, int search, int fillColor, vector<int> *outPoints) {
 	vector<int> *res = (outPoints)?outPoints:(new vector<int>());
 	res->clear();
+	if (input[x0+w*y0] != search) return 0;
     res->push_back(x0 + w*y0);
     input[x0 + w*y0] = fillColor;
 
