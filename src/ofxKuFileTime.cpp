@@ -10,7 +10,7 @@ bool ofxKuFileTime::isNewerThan(string fileName1, string fileName2) {
 		Poco::Timestamp created2 = file2.getPocoFile().created();
 		return (created1 > created2);
 	}
-	return false;
+	return true;
 }
 
 //--------------------------------------------------------------
