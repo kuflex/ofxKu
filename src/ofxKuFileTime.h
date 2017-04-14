@@ -6,6 +6,6 @@
 #include "ofMain.h"
 
 struct ofxKuFileTime {
-	bool isNewerThan(string fileName1, string fileName2);
+	static bool isNewerThan(string fileName1, string fileName2);
 };
 //bool Filetime_is_file_older_hours(string fileName, int hours);
