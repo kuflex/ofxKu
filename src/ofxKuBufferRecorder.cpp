@@ -28,6 +28,7 @@ void ofxKuBufferRecorder::store_buffer(vector<unsigned char> &buffer) {
 	if (recording_) {
 		string fileName = folder_ + "/" + ofToString(frame_,5,'0');
 		fileName = ofToDataPath(fileName);
+		//cout << "ofxKuBufferRecorder  store buffer " << buffer.size() << endl;
 		FILE *file = fopen(fileName.c_str(),"wb");
 		if (file) {
 			fwrite(&buffer[0], 1, buffer.size(), file);
@@ -67,7 +68,7 @@ void ofxKuBufferPlayer::start_play(string folder) {	//folder will be created
 	time_frame_ = 0;
 	frame_ = 0;
 
-	cout << "start play " << folder << " " << n << endl;
+	//cout << "start play " << folder << " " << n << endl;
 }
 
 //--------------------------------------------------------------
@@ -118,7 +119,7 @@ void ofxKuBufferPlayer::update() {
 		float dt = ofClamp(time - time_, 0.001, 1);
 		time_ = time;
 
-		cout << "ofxKuBufferPlayer::update(), dt " << dt << endl;
+		//cout << "ofxKuBufferPlayer::update(), dt " << dt << endl;
 		isFrameNew_ = false;
 		time_frame_ += dt;
 		while (time_frame_ > 1.0 / fps_ && dt>0) {
