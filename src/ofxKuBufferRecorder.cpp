@@ -95,6 +95,7 @@ bool ofxKuBufferPlayer::get_next_frame() {
 	int n = files.size();
 	if (n==0) return false;
 	int f = frame_ % n;
+	frame_ = f;
 	frame_++;
 	string fileName = folder_ + "/" + ofToString(f,5,'0');
 	fileName = ofToDataPath(fileName);
