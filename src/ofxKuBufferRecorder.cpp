@@ -83,7 +83,7 @@ bool ofxKuBufferPlayer::is_playing() {
 
 //--------------------------------------------------------------
 bool ofxKuBufferPlayer::isFrameNew() {
-	return isFrameNew_;
+	return is_playing() && isFrameNew_;
 }
 
 //--------------------------------------------------------------
