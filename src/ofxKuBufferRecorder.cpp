@@ -124,7 +124,7 @@ void ofxKuBufferPlayer::update() {
 		time_frame_ += dt;
 		while (time_frame_ > 1.0 / fps_ && dt>0) {
 			get_next_frame();
-			time_frame_ -= dt;
+			time_frame_ -= 1.0 / fps_;
 			isFrameNew_ = true;
 		}
 	}
