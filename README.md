@@ -11,6 +11,8 @@ It contains classes and functions for rendering, image analysis and working with
 * ofxKuDrawRaster draws raster array
 
 ## Image processing
+* ofxKuRaster.h - include it for accessing all image processing functions
+* ofxKuRasterArithmetics - add, multiply, divide raster arrays
 * ofxKuRasterBlur_int, ofxKuRasterBlur_float - box blur for raster arrays
 * ofxKuRasterResize_nearest - resize raster arrays
 * ofxKuFloodFill function which do flood fill in array
