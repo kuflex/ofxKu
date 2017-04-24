@@ -30,25 +30,29 @@ void ofxKuRasterOptFlow::update( vector<unsigned char> mask0, int w0, int h0) {
 	ofxKuRasterResize_nearest(mask0,w0,h0,mask_temp_,w_,h_);
 	ofxKuRasterBlur_float(mask_temp_,w_,h_,blur_input,mask);
 
+	if (mask1_.size()!=w_*h_ || mask2_.size()!=w_*h_) {
+		return;
+	}
+
 	//moves
 	vector<float> X( w_ * h_ );
 	vector<float> Y( w_ * h_ );
-	for (int y=0; y<h; y++) {
-		for (int x=0; x<w; x++) {
+	for (int y=0; y<h_; y++) {
+		for (int x=0; x<w_; x++) {
 			X[ x + w_ * y ] = x;
 			Y[ x + w_ * y ] = y;
 		}
 	}
 
-		//Поток
-		small1.convertTo( _temp1, CV_32FC1, 1.0 / 255.0 );
-		small2.convertTo( _temp2, CV_32FC1, 1.0 / 255.0 );
-		cv::multiply( _optX, _temp1, _tempX1 );
-		cv::multiply( _optY, _temp1, _tempY1 );
-		cv::multiply( _optX, _temp2, _tempX2 );
-		cv::multiply( _optY, _temp2, _tempY2 );
+	//multiply
+	vector<float> X1,Y1,X2,Y2;
+	ofxKuRasterMultiply(X, mask1_, X1, w_, h_);
+	ofxKuRasterMultiply(Y, mask1_, Y1, w_, h_);
+	ofxKuRasterMultiply(X2, mask2_, X2, w_, h_);
+	ofxKuRasterMultiply(Y2, mask2_, Y1, w_, h_);
 
-		int blurSize = flowSmooth;
+	//blur
+	/*int blurSize = flowSmooth;
 		cv::Size blurS( blurSize, blurSize );
 		blur( _tempX1, _tempX1, blurS);				//TODO - можно и гауссово сглаживание попробовать будет!
 		blur( _tempY1, _tempY1, blurS );
@@ -96,7 +100,7 @@ void ofxKuRasterOptFlow::update( vector<unsigned char> mask0, int w0, int h0) {
 			resizeFlow( small2 ); //small1
 		}
 	}
-
+	*/
 }
 
 //-------------------------------------------------------------------------------
