@@ -8,6 +8,7 @@ It contains classes and functions for rendering, image analysis and working with
 * ofxKuLineRender class for fast rendering lines
 * ofxKuVertexRender class for fast rendering points
 * ofxKuDrawTextureFit(ofTexture &tex, float x, float y, float w, float h) function in ofxKuDrawUtils for fitting texture in rectangle
+* ofxKuDrawRaster draws raster array
 
 ## Image processing
 * ofxKuRasterBlur_int, ofxKuRasterBlur_float - box blur for raster arrays
