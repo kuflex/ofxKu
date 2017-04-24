@@ -1,6 +1,5 @@
 #include "ofxKuRasterOptFlow.h"
-#include "ofxKuRasterBlur.h"
-#include "ofxKuRasterResize.h"
+#include "ofxKuRaster.h"
 #include "ofxKuDrawRasters.h"
 
 //-------------------------------------------------------------------------------
@@ -25,19 +24,85 @@ void ofxKuRasterOptFlow::setup(int w, int h) {
 }
 
 //-------------------------------------------------------------------------------
-void ofxKuRasterOptFlow::update( vector<unsigned char> mask0, int w, int h) {
+void ofxKuRasterOptFlow::update( vector<unsigned char> mask0, int w0, int h0) {
 	//resize and blur input mask
 	vector<float> &mask = (mask1_.empty())?mask1_:mask2_;
-	ofxKuRasterResize_nearest(mask0,w,h,mask_temp_,w_,h_);
+	ofxKuRasterResize_nearest(mask0,w0,h0,mask_temp_,w_,h_);
 	ofxKuRasterBlur_float(mask_temp_,w_,h_,blur_input,mask);
 
+	//moves
+	vector<float> X( w_ * h_ );
+	vector<float> Y( w_ * h_ );
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w; x++) {
+			X[ x + w_ * y ] = x;
+			Y[ x + w_ * y ] = y;
+		}
+	}
+
+		//Поток
+		small1.convertTo( _temp1, CV_32FC1, 1.0 / 255.0 );
+		small2.convertTo( _temp2, CV_32FC1, 1.0 / 255.0 );
+		cv::multiply( _optX, _temp1, _tempX1 );
+		cv::multiply( _optY, _temp1, _tempY1 );
+		cv::multiply( _optX, _temp2, _tempX2 );
+		cv::multiply( _optY, _temp2, _tempY2 );
+
+		int blurSize = flowSmooth;
+		cv::Size blurS( blurSize, blurSize );
+		blur( _tempX1, _tempX1, blurS);				//TODO - можно и гауссово сглаживание попробовать будет!
+		blur( _tempY1, _tempY1, blurS );
+		blur( _tempX2, _tempX2, blurS );
+		blur( _tempY2, _tempY2, blurS );
+
+		//усредняем
+		blur( _temp1, _wgh1, blurS );
+		blur( _temp2, _wgh2, blurS );
+		max( _wgh1, 0.001, _wgh1 );
+		max( _wgh2, 0.001, _wgh2 );
+		divide( _tempX1, _wgh1, _tempX1 );
+		divide( _tempY1, _wgh1, _tempY1 );
+		divide( _tempX2, _wgh2, _tempX2 );
+		divide( _tempY2, _wgh2, _tempY2 );
+
+
+		//расчет веса
+		_diffX = _tempX2 - _tempX1;
+		_diffY = _tempY2 - _tempY1;
+
+		//Заполняем _flow
+
+		//сначала строим вектор потока в большем размере
+		pcvConverter::matFlowToVectorFloat( _diffX, _diffY, _flowTemp );
+
+		//контроль длин
+		float thresh = blurSize * 2;	//если значение больше - значит, выброс
+		for (int y=0; y<h; y++) {
+			for (int x=0; x<w; x++) {
+				float &fx = _flowTemp[ 2*(x + w * y) ];
+				float &fy = _flowTemp[ 2*(x + w * y) + 1 ];
+				if ( fabs( fx ) > thresh || fabs( fy ) > thresh ) {
+					fx = fy = 0;
+				}
+			}
+		}
+
+		//теперь уменьшаем - не сглаживая, а по принципу максимального значения 
+		if ( !flowUseNewFrame ) {
+			//resize( img1, _newFrameSmooth, cv::Size( _wflow, _hflow) );
+			//GaussianBlur( _newFrameSmooth, _newFrameSmooth, cv::Size(flowSmooth, flowSmooth), 0 );
+			//resizeFlow( _newFrameSmooth ); //small1
+			
+			resizeFlow( small2 ); //small1
+		}
+	}
 
 }
 
 //-------------------------------------------------------------------------------
 void ofxKuRasterOptFlow::draw(float x, float y, float w, float h, float amp) {
 	ofSetColor(255);
-	ofxKuDrawRaster(mask_temp_, w_, h_, x, y, w, h, 0, 255);
+	ofxKuDrawRaster(mask2_, w_, h_, x, y, w, h, 0, 255);
 }
 
 //-------------------------------------------------------------------------------
