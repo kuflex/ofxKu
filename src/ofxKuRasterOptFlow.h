@@ -14,13 +14,14 @@ struct ofxKuRasterOptFlow {
 	vector<float> &flowX() { return flowX_; }
 	vector<float> &flowY() { return flowY_; }
 	
-	void draw(float x, float y, float w, float h, float amp);
+	void draw(float x, float y, float w, float h, float amp, int step);
 	void resizeFlowTo(int outW, int outH, vector<float> &outX, vector<float> &outY);
 
 	//params
 	int w();			//flow size
 	int h();
 	int blur_input;		//input blurring
+	int blur_data;		//data blurring - for computing mean value
 
 
 private:
