@@ -11,6 +11,7 @@ It contains classes and functions for rendering, image analysis and working with
 
 ## Image processing
 * ofxKuRasterBlur_int, ofxKuRasterBlur_float - box blur for raster arrays
+* ofxKuRasterResize_nearest - resize raster arrays
 * ofxKuFloodFill function which do flood fill in array
 
 ## Utilities for files
