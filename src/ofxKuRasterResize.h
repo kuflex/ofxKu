@@ -17,7 +17,7 @@ void ofxKuRasterResize_nearest(vector<T> &input, int w, int h, vector<T1> &outpu
 	for (int y1=0; y1<h1; y1++) {
 		int y = y1 * h / h1;
 		for (int x1=0; x1<w1; x1++) {
-			int x = x1 * w / h1;
+			int x = x1 * w / w1;
 			output[x1 + w1*y1] = input[x + w*y];
 		}
 	}
