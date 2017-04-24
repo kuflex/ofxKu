@@ -37,7 +37,7 @@ void ofxKuRasterDivide(const vector<T1> &input1, const vector<T2> &input2, vecto
 							   int w, int h, T2 eps, T3 use_if_less_eps) {
 	output.resize(w*h);
 	for (int i=0; i<w*h; i++) {
-		if (fabs(input2[i])>=eps) { 
+		if (fabs(input2[i])>eps) { 
 			output[i] = input1[i]/input2[i];
 		}
 		else output[i] = use_if_less_eps;
