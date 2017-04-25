@@ -99,3 +99,5 @@ void ofxKuRasterProjectY(const vector<T> &input, vector<T2> &output, int w, int 
 		output[y] = sum;
 	}
 }
+
+void ofxKuRasterHistogram(const vector<unsigned char> &input, vector<int> &histogram, int w, int h);

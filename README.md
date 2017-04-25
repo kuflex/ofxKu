@@ -13,7 +13,7 @@ It contains classes and functions for rendering, image analysis and working with
 ## Image processing
 * ofxKuRaster.h - include it for accessing all image processing functions
 * ofxKuRasterArithmetics - add, subtract, multiply, divide, threshold, find mask for range values, 
-count number of pixels in range, project on axes for raster arrays
+count number of pixels in range, project on axes, histogram for raster arrays
 * ofxKuRasterBlur_int, ofxKuRasterBlur_float - box blur for raster arrays
 * ofxKuRasterMorphology - dilatation and erosion
 * ofxKuRasterResize_nearest - resize raster arrays
