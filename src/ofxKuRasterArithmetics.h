@@ -1,6 +1,6 @@
 #pragma once
 
-//Resize raster
+//Raster arithmetics, thresholding, counting
 
 #include "ofMain.h"
 
@@ -51,4 +51,27 @@ void ofxKuRasterThreshold(const vector<T1> &input, vector<T2> &output,
 	for (int i=0; i<w*h; i++) {
 		output[i] = (input[i] > threshold) ? value1 : value0;
 	}
+}
+
+//Create mask with pixel equal to value1 if input in [value_from,value_to] and value0 in the opposite case
+template <typename T1, typename T2>
+void ofxKuRasterRangeMask(const vector<T1> &input, vector<T2> &output,
+							   int w, int h, T1 value_from, T1 value_to, T2 value0, T2 value1) {
+	output.resize(w*h);
+	for (int i=0; i<w*h; i++) {
+		output[i] = (input[i] >= value_from && input[i] <= value_to) ? value1 : value0;
+	}
+}
+
+//Count number of pixels with values in specified range
+//Usage example: 
+//cout << ofxKuRasterRangeCount(mask_,w_,h_,unsigned char(1), unsigned char(255) ) << endl;
+template <typename T>
+int ofxKuRasterRangeCount(const vector<T> &input, int w, int h, T value_from, T value_to) {
+
+	int sum = 0;
+	for (int i=0; i<w*h; i++) {
+		if (input[i] >= value_from && input[i] <= value_to) sum++;
+	}
+	return sum;
 }

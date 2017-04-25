@@ -12,10 +12,12 @@ It contains classes and functions for rendering, image analysis and working with
 
 ## Image processing
 * ofxKuRaster.h - include it for accessing all image processing functions
-* ofxKuRasterArithmetics - add, subtract, multiply, divide, threshold raster arrays
+* ofxKuRasterArithmetics - add, subtract, multiply, divide, threshold, find mask for range values, 
+count number of pixels in range for raster arrays
 * ofxKuRasterBlur_int, ofxKuRasterBlur_float - box blur for raster arrays
+* ofxKuRasterMorphology - dilatation and erosion
 * ofxKuRasterResize_nearest - resize raster arrays
-* ofxKuFloodFill function which do flood fill in array
+* ofxKuFloodFill function which do flood fill in array, removing small blobs
 
 ## Utilities for files
 * ofxKuBufferRecorder class for recording/replaying data buffers, such as kinect data

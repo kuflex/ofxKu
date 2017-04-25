@@ -1,4 +1,5 @@
 ﻿#include "ofxKuFloodFill.h"
+#include "ofxKuRaster.h"
 
 //--------------------------------------------------------------
 
@@ -54,5 +55,29 @@ size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
     if ( !outPoints ) { delete res; }
     return n;
 }
-//--------------------------------------------------------------
 
+//--------------------------------------------------------------
+//remove small blobs, which has values [good_val0, good_val1] and area < min_area. For this blobs, set these to erase_val
+void ofxKuRasterBlobsFilter(vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int sv,
+							int min_area, unsigned char good_val0, unsigned char good_val1, unsigned char erase_val ) {
+	output = input;
+	vector<unsigned char> mask;
+	ofxKuRasterRangeMask(input, mask, w, h, good_val0, good_val1, unsigned char (0), unsigned char (255) );
+	vector<int> fillPoints;
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w; x++) {
+			if (mask[x+w*y] == 255) {
+				int area = ofxKuFloodFill(mask, w, h, sv, x, y, 255, 128, &fillPoints);
+				if (area < min_area) {
+					//erasing small area
+					for (int i=0; i<fillPoints.size(); i++) {
+						int p = fillPoints[i];
+						output[p%w + w*(p/w)] = 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------
