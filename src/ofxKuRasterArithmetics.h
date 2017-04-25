@@ -75,3 +75,27 @@ int ofxKuRasterRangeCount(const vector<T> &input, int w, int h, T value_from, T 
 	}
 	return sum;
 }
+
+template <typename T, typename T2>
+void ofxKuRasterProjectX(const vector<T> &input, vector<T2> &output, int w, int h) {
+	output.resize(w);
+	for (int x=0; x<w; x++) {
+		T2 sum = 0;
+		for (int y=0; y<h; y++) {
+			sum += input[x+w*y];
+		}
+		output[x] = sum;
+	}
+}
+
+template <typename T, typename T2>
+void ofxKuRasterProjectY(const vector<T> &input, vector<T2> &output, int w, int h) {
+	output.resize(h);
+	for (int y=0; y<h; y++) {
+		T2 sum = 0;
+		for (int x=0; x<w; x++) {
+			sum += input[x+w*y];
+		}
+		output[y] = sum;
+	}
+}
