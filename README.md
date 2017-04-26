@@ -27,6 +27,9 @@ count number of pixels in range, project on axes, histogram for raster arrays
 ## Timing
 * ofxKuSlowBit - bit, controllable changing it state
 
+## Values
+* ofxKuValueCheckChange - checks if value was changed
+
 ## Utilities for files
 * ofxKuBufferRecorder class for recording/replaying data buffers, such as kinect data
 * ofxKuFileTime::isNewerThan(string fileName1, string fileName2) function which compares file creation times
