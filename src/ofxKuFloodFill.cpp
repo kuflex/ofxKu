@@ -62,7 +62,7 @@ void ofxKuRasterBlobsFilter(vector<unsigned char> &input, vector<unsigned char> 
 							int min_area, unsigned char good_val0, unsigned char good_val1, unsigned char erase_val ) {
 	output = input;
 	vector<unsigned char> mask;
-	ofxKuRasterRangeMask(input, mask, w, h, good_val0, good_val1, unsigned char (0), unsigned char (255) );
+	ofxKuRasterRangeMask(input, mask, w, h, good_val0, good_val1, (unsigned char) (0), (unsigned char) (255) );
 	vector<int> fillPoints;
 	for (int y=0; y<h; y++) {
 		for (int x=0; x<w; x++) {
