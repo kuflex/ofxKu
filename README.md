@@ -18,6 +18,7 @@ count number of pixels in range, project on axes, histogram for raster arrays
 * ofxKuRasterMorphology - dilatation and erosion
 * ofxKuRasterResize_nearest - resize raster arrays
 * ofxKuFloodFill function which do flood fill in array, removing small blobs
+* ofxKuRasterOpenCV - gaussian smoothing and other functions, implemented with OpenCV. Requires ofxOpenCv addon.
 
 ## Statistics
 * ofxKuMathStat - compute median value of the vector
