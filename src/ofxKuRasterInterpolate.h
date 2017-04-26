@@ -6,8 +6,8 @@
 
 //integer types
 template <typename T>
-T ofxKuRasterInterpolate_bilinear(vector<T> &input, int w, int h, float x, float y) {
-	if (x < 0 || x > w-1 || y < 0 || y > h-1) return 0;
+T ofxKuRasterInterpolate_bilinear(vector<T> &input, int w, int h, float x, float y, const T &empty) {
+	if (x < 0 || x > w-1 || y < 0 || y > h-1) return empty;
 	int xi = int(x);
 	int yi = int(y);
 	int xi1 = min(xi+1, w-1);
@@ -21,6 +21,6 @@ T ofxKuRasterInterpolate_bilinear(vector<T> &input, int w, int h, float x, float
 }
 
 template <typename T>
-T ofxKuRasterInterpolate_bilinear(vector<T> &input, int w, int h, const ofPoint &p) {
-	return ofxKuRasterInterpolate_bilinear(input, w, h, p.x, p.y);
+T ofxKuRasterInterpolate_bilinear(vector<T> &input, int w, int h, const ofPoint &p, const T &empty) {
+	return ofxKuRasterInterpolate_bilinear(input, w, h, p.x, p.y, empty);
 }
