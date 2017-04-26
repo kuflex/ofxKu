@@ -25,6 +25,7 @@ struct ofxKuRasterOptFlow {
 	int blur_data;		//data blurring - for computing mean value (7)
 	float eps_count;	//percent of pixels in area to use this for optical flow computing (0.05)
 
+	//vector<float> mask_internal();	//latest internal mask
 
 private:
 	int w_, h_;
@@ -32,8 +33,6 @@ private:
 
 	vector<float> mask1_, mask2_;
 	vector<float> mask1Z_, mask2Z_;
-	
-
 
 	vector<float> mask_temp_;
 

@@ -3,7 +3,7 @@
 
 
 //-------------------------------------------------------------
-void pbGaussSmooth( vector<float> &mask, int w, int h, int rad, vector<float> &res )
+void ofxKuRasterGaussSmooth( vector<float> &mask, int w, int h, int rad, vector<float> &res )
 {
     ofxCvFloatImage img;
     img.allocate( w, h );
@@ -20,7 +20,7 @@ void pbGaussSmooth( vector<float> &mask, int w, int h, int rad, vector<float> &r
 }
 
 //-------------------------------------------------------------
-void pbGaussSmoothResized( vector<float> &mask, int w, int h, int rad, vector<float> &res, int wres, int hres )
+void ofxKuRasterResized( vector<float> &mask, int w, int h, int rad, vector<float> &res, int wres, int hres )
 {
     ofxCvFloatImage img;
     img.allocate( w, h );
@@ -38,7 +38,7 @@ void pbGaussSmoothResized( vector<float> &mask, int w, int h, int rad, vector<fl
 }
 
 //-------------------------------------------------------------
-void pbFieldDirection( vector<float> &energy, int w, int h, int step, vector<ofPoint> &res )
+void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, vector<ofPoint> &res )
 {
     res.resize( w*h );
     for (int i=0; i<w*h; i++) {
