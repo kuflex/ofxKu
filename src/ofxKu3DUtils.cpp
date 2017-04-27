@@ -11,7 +11,7 @@ void ofxKuLoadObjFile( ofMesh &mesh, string fileName, bool useTex,
 {
 	cout << "loading " << fileName << "...";
 	string fileNamePly = fileName + ".ply";
-	if (!caching_to_ply && ofxKuFileTime::isNewerThan(fileName, fileNamePly)) {
+	if (!caching_to_ply || ofxKuFileTime::isNewerThan(fileName, fileNamePly)) {
 		if (caching_to_ply) cout << "   rebuild cached version..." << endl;
 		mesh.clear();
 		vector<string> lines = ofxKuFileReadStrings( ofToDataPath(fileName) );
