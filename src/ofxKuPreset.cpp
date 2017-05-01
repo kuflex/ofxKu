@@ -4,6 +4,7 @@
 //--------------------------------------------------------------
 ofxKuPreset::ofxKuPreset() {
 	trans_ = false;
+	trans_time_ = 0.5;
 	trans_value_ = 0;
 }
 
@@ -22,7 +23,6 @@ void ofxKuPreset::load_file(string file_name) {
 	preset_ = ofxKuFileReadStrings(file_name);
 	file_name_ = file_name;
 }
-
 
 //--------------------------------------------------------------
 void ofxKuPreset::save_file(string file_name) {
@@ -86,6 +86,8 @@ void ofxKuPreset::update() {
 		for (int i=0; i<var_.size(); i++) {
 			var_[i].trans(trans_value_);
 		}
+
+		cout << "trans_value " << trans_value_ << endl;
 	}
 }
 
@@ -110,6 +112,11 @@ void ofxKuPreset::trans_to(int id, float trans_time) { //slow transition between
 				}
 			}
 		}
+
+		//enable transition mode
+		trans_ = true;
+		trans_start_ = ofGetElapsedTimef();
+		trans_time_ = trans_time;
 	}
 }
 
