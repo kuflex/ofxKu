@@ -74,6 +74,9 @@ private:
 	string file_name_;
 
 	Var *findVar(const string &name);
+	map<string, int> var_map_;
+	void name_to_map(string name, int i);
+
 
 	bool trans_;
 	float trans_time_;
