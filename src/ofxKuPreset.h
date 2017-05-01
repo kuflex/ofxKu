@@ -10,8 +10,9 @@ struct ofxKuPreset {
     void add_int(string name, int *var);
 	void add_float(string name, float *var);
 
-	void load_file(string file_name);
-	void save_file(string file_name);
+	void load(string file_name);
+	void save(string file_name);
+	void load();
 	void save();
 
 	void store(int id);

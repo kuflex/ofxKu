@@ -28,21 +28,39 @@ void ofxKuPreset::name_to_map(string name, int i) {
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::load_file(string file_name) {
-	preset_ = ofxKuFileReadStrings(file_name);
+void ofxKuPreset::load(string file_name) {
+	vector<string> file = ofxKuFileReadStrings(file_name);
+	int n = file.size()/2;
+	preset_.resize(n);
+	for (int i=0; i<n; i++) {
+		preset_[i] = file[i*2+1];
+	}
 	file_name_ = file_name;
 }
 
 //--------------------------------------------------------------
-void ofxKuPreset::save_file(string file_name) {
-	ofxKuFileWriteStrings(preset_, file_name);
+void ofxKuPreset::save(string file_name) {
+	int n = preset_.size();
+	vector<string> file(n*2);
+	for (int i=0; i<n; i++) {
+		file[2*i] = "========   " + ofToString(i,4,'0') + "   =============================";
+		file[2*i+1] = preset_[i];
+	}
+	ofxKuFileWriteStrings(file, file_name);
 	file_name_ = file_name;
+}
+
+//--------------------------------------------------------------
+void ofxKuPreset::load() {
+	if (file_name_ != "") {
+		load(file_name_);
+	}
 }
 
 //--------------------------------------------------------------
 void ofxKuPreset::save() {
 	if (file_name_ != "") {
-		save_file(file_name_);
+		save(file_name_);
 	}
 }
 
