@@ -5,6 +5,8 @@ void ofxKuPresetLooper::setup(ofxKuPreset *preset) {
 	preset_ = preset;
 	time0_ = ofGetElapsedTimef();
 	loop_pos_last_ = -1;
+	glob_timer_start_ = ofGetElapsedTimef();
+	glob_timer_=0;
 }
 
 //--------------------------------------------------------------
@@ -13,6 +15,10 @@ void ofxKuPresetLooper::update() {
 	float dt = ofClamp(time-time0_, 0.01, 0.1);
 	time0_ = time;
 
+	if (*enable_) {
+		glob_timer_ = time - glob_timer_start_;
+	}
+
 	//looping
 	if (*enable_) {
 		if (*timer_>=*show_time_) {
@@ -20,7 +26,8 @@ void ofxKuPresetLooper::update() {
 			int &pos = *loop_pos_;
 			pos++;
 			if (pos > *loop_end_) {
-				pos = *loop_start_;
+				//pos = *loop_start_;
+				begin();
 			}
 		}
 		else {
@@ -43,9 +50,16 @@ void ofxKuPresetLooper::update() {
 
 //--------------------------------------------------------------
 void ofxKuPresetLooper::restart() {
+	preset_->recall(*loop_start_);
+	begin();
+}
+
+//--------------------------------------------------------------
+void ofxKuPresetLooper::begin() {
 	*loop_pos_ = *loop_start_;
-	preset_->recall(*loop_pos_);
 	*timer_ = 0;
+	glob_timer_start_ = ofGetElapsedTimef();
+	glob_timer_ = 0;
 }
 
 //--------------------------------------------------------------

@@ -41,6 +41,7 @@ struct ofxKuPresetLooper {
 	void link_preset_num(int *preset_num)	{ preset_num_ = preset_num; }
 	void link_timer(float *timer)			{ timer_ = timer; }
 
+	float glob_timer() { return glob_timer_/60.0; }
 protected:
 	ofxKuPreset *preset_;
 	int *enable_;
@@ -65,6 +66,11 @@ protected:
 	float time0_;	//for dt measurement
 	float *timer_;	//current preset showing timer
 	int loop_pos_last_;	
+
+	float glob_timer_start_;
+	float glob_timer_;	//global loop timer
+
+	void begin();
 
 };
 
