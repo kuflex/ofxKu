@@ -63,7 +63,11 @@ struct ofxKuPreset {
 			trans1 = to;
 		}
 		void trans(float t) {
-			if (varf) *varf = ofLerp(trans0, trans1, t);
+			if (varf) {
+				//t = ofMap(sin(ofMap(t,0,1,-PI/2,PI/2)),-1,1,0,1);
+				//t = t*t*(3-2*t);
+				*varf = ofLerp(trans0, trans1, t);
+			}
 			if (vari) *vari = (t<0.5)?trans0:trans1;
 		}
 

@@ -1,6 +1,6 @@
 #include "ofxKuRasterOpenCV.h"
 #include "ofxOpenCv.h"
-
+#include "ofxKuRaster.h"
 
 //-------------------------------------------------------------
 void ofxKuRasterGaussSmooth( vector<float> &mask, int w, int h, int rad, vector<float> &res )
@@ -98,4 +98,23 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
     }
 }
 */
+//-------------------------------------------------------------
+void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold ) {
+
+	//cvConvexHull( CvPoint* points, int num_points,
+    //                         CvRect* bound_rect,
+    //                         int orientation, int* hull, int* hullsize );
+	output.resize(w*h);
+	fill(output.begin(), output.end(), 0);
+	vector<ofPoint> contour;
+	ofxKuRasterBoundaryPoints(input, contour, w, h, (unsigned char)(threshold));
+	for (int i=0; i<contour.size(); i++) {
+		int x = (int)(contour[i].x);
+		int y = (int)(contour[i].y);
+		output[x+w*y] = 255;
+	}
+
+	//output = input;
+}
+
 //-------------------------------------------------------------

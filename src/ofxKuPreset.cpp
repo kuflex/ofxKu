@@ -138,8 +138,11 @@ void ofxKuPreset::update() {
 		trans_value_ = (trans_time_>0)?delta/trans_time_:1;
 		if (trans_value_ >= 1) trans_ = false;
 		trans_value_ = ofClamp(trans_value_,0,1);
+		
+		float t = trans_value_;
+		t = t*t*(3-2*t);		//non-linear transform, such that F(0)=F'(0)=F'(1)=0, F(1)=1.
 		for (int i=0; i<var_.size(); i++) {
-			var_[i].trans(trans_value_);
+			var_[i].trans(t);
 		}
 	}
 }
