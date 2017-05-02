@@ -5,7 +5,7 @@
 #include "ofMain.h"
 
 //Find boundary points - it is points with value > threshold, and having at least one pixel in cross neighborhood with value <= threshold
-//Point class - can be any class having x,y fields
+//Point class - can be any class having x,y fields, for example, ofPoint or CvPoint.
 template <typename T, typename PointClass>
 void ofxKuRasterBoundaryPoints(const vector<T> &input, vector<PointClass> &pnt, int w, int h, T threshold) {
 	pnt.reserve(w*h);
