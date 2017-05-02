@@ -100,6 +100,7 @@ void ofxKuPreset::recall(int id) {		//one-step transition to preset
 				}
 			}
 		}
+		trans_ = false;
 	}
 }
 
@@ -129,6 +130,13 @@ void ofxKuPreset::trans_to(int id, float trans_time) { //slow transition between
 	}
 }
 
+//--------------------------------------------------------------
+void ofxKuPreset::update_manual(float t) {	//instead update, call this for manual morphing between presets, t==0 - start, t==1 - end
+	t = t*t*(3-2*t);		//non-linear transform, such that F(0)=F'(0)=F'(1)=0, F(1)=1.
+	for (int i=0; i<var_.size(); i++) {
+		var_[i].trans(t);
+	}
+}
 
 //--------------------------------------------------------------
 void ofxKuPreset::update() {
@@ -138,12 +146,8 @@ void ofxKuPreset::update() {
 		trans_value_ = (trans_time_>0)?delta/trans_time_:1;
 		if (trans_value_ >= 1) trans_ = false;
 		trans_value_ = ofClamp(trans_value_,0,1);
-		
-		float t = trans_value_;
-		t = t*t*(3-2*t);		//non-linear transform, such that F(0)=F'(0)=F'(1)=0, F(1)=1.
-		for (int i=0; i<var_.size(); i++) {
-			var_[i].trans(t);
-		}
+
+		update_manual(trans_value_);
 	}
 }
 

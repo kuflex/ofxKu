@@ -19,6 +19,7 @@ struct ofxKuPreset {
 	void recall(int id);		//one-step transition to preset
 	void trans_to(int id, float trans_time); //slow transition between presets
 	void update();
+	void update_manual(float t);	//instead update, call this for manual morphing between presets, t==0 - start, t==1 - end
 
 	bool trans_is_going();	//now is transition
 	float trans_value();	//0 - start, ... 1 - end
