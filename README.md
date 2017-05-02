@@ -19,10 +19,10 @@ It contains classes and functions for rendering, image analysis and working with
 count number of pixels in range, project on axes, histogram for raster arrays
 * ofxKuRasterBlur_int, ofxKuRasterBlur_float - box blur for raster arrays
 * ofxKuRasterInterpolate - interpolation of raster arrays, including ofPoint rasters
-* ofxKuRasterMorphology - dilatation and erosion
+* ofxKuRasterMorphology - dilatation and erosion, contour detection
 * ofxKuRasterResize_nearest - resize raster arrays
 * ofxKuFloodFill function which do flood fill in array, removing small blobs
-* ofxKuRasterOpenCV - gaussian smoothing and other functions, implemented with OpenCV. Requires ofxOpenCv addon.
+* ofxKuRasterOpenCV - gaussian smoothing, convex hull, implemented with OpenCV. Requires ofxOpenCv addon.
 
 ## Statistics
 * ofxKuMathStat - compute median value of the vector
