@@ -21,14 +21,21 @@ void ofxKuPresetLooper::update() {
 
 	//looping
 	if (*enable_) {
-		if (*timer_>=*show_time_) {
+		if (*timer_>*show_time_) {
 			*timer_ = -*trans_time_; //wait for transition
 			int &pos = *loop_pos_;
-			pos++;
-			if (pos > *loop_end_) {
-				//pos = *loop_start_;
-				begin();
+			if (pos_is_inside_bank()) {
+				pos++;
+				if (pos > *loop_end_) {	
+					*loop_pos_ = *loop_start_;
+					begin();
+				}
 			}
+			else {
+				//jump to random pos in new bank
+				*loop_pos_ = ofRandom(*loop_start_, *loop_end_);
+			}
+			*preset_num_ = *loop_pos_;
 		}
 		else {
 			*timer_ += dt;
@@ -50,16 +57,34 @@ void ofxKuPresetLooper::update() {
 
 //--------------------------------------------------------------
 void ofxKuPresetLooper::restart() {
-	preset_->recall(*loop_start_);
+	recall(*loop_start_);
 	begin();
 }
 
 //--------------------------------------------------------------
-void ofxKuPresetLooper::begin() {
-	*loop_pos_ = *loop_start_;
+void ofxKuPresetLooper::recall(int id) {
+	*loop_pos_ = loop_pos_last_ = id;
+	*preset_num_ = id;
+	preset_->recall(id);
+	*timer_ = 0;
+}
+
+//--------------------------------------------------------------
+//jump to random preset from interval
+void ofxKuPresetLooper::recall_random() {
+	recall( ofRandom(*loop_start_, *loop_end_) );
+}
+
+//--------------------------------------------------------------
+void ofxKuPresetLooper::begin() {	
 	*timer_ = 0;
 	glob_timer_start_ = ofGetElapsedTimef();
 	glob_timer_ = 0;
+}
+
+//--------------------------------------------------------------
+bool ofxKuPresetLooper::pos_is_inside_bank() {
+	return (*loop_pos_ >= *loop_start_ && *loop_pos_ <= *loop_end_);
 }
 
 //--------------------------------------------------------------

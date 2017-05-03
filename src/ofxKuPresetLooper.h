@@ -11,6 +11,10 @@ struct ofxKuPresetLooper {
 	void update();
 	void restart();
 
+	bool pos_is_inside_bank();
+	void recall(int id);
+	void recall_random();	
+
     ofxKuPresetLooper() {
 		enable0_ = 0;
 		loop_start0_ = 1;
@@ -42,6 +46,7 @@ struct ofxKuPresetLooper {
 	void link_timer(float *timer)			{ timer_ = timer; }
 
 	float glob_timer() { return glob_timer_/60.0; }
+
 protected:
 	ofxKuPreset *preset_;
 	int *enable_;
