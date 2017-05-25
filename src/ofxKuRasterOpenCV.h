@@ -13,6 +13,9 @@ void ofxKuRasterResized( vector<float> &mask, int w, int h, int rad, vector<floa
 //Field direction
 void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, vector<ofPoint> &res );
 
+//Convex hull
+void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold );
+
 //Заполняет нулевые направления в accum значениями из source
 //void pbCombineFieldDirection( vector<ofPoint> &accum, int w, int h, vector<ofPoint> &source, int ws, int hs  );
 

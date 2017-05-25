@@ -1,11 +1,12 @@
 #include "ofxKuRasterOpenCV.h"
 #include "ofxOpenCv.h"
-
+#include "ofxKuRaster.h"
 
 //-------------------------------------------------------------
 void ofxKuRasterGaussSmooth( vector<float> &mask, int w, int h, int rad, vector<float> &res )
 {
     ofxCvFloatImage img;
+	img.setUseTexture(false);
     img.allocate( w, h );
     img.setFromPixels( &mask[0], w, h );
     
@@ -23,6 +24,7 @@ void ofxKuRasterGaussSmooth( vector<float> &mask, int w, int h, int rad, vector<
 void ofxKuRasterResized( vector<float> &mask, int w, int h, int rad, vector<float> &res, int wres, int hres )
 {
     ofxCvFloatImage img;
+	img.setUseTexture(false);
     img.allocate( w, h );
     img.setFromPixels( &mask[0], w, h );
     img.resize( wres, hres );
@@ -98,4 +100,58 @@ void ofxKuRasterFieldDirection( vector<float> &energy, int w, int h, int step, v
     }
 }
 */
+//-------------------------------------------------------------
+void ofxKuRasterConvexHull( vector<unsigned char> &input, vector<unsigned char> &output, int w, int h, int threshold ) {
+
+	output.resize(w*h);
+	fill(output.begin(), output.end(), 0);
+
+	//contour points
+	vector<CvPoint> contour;
+	ofxKuRasterBoundaryPoints(input, contour, w, h, (unsigned char)(threshold));
+	
+	//debug draw contour
+	//for (int i=0; i<contour.size(); i++) {
+	//	int x = contour[i].x;
+	//	int y = contour[i].y;
+	//	output[x+w*y] = 255;
+	//}
+
+	//convex hull
+	int n = contour.size();
+	if (n>0) {
+		vector<int> hull(n);
+		int hullsize = n;
+		cvConvexHull( &contour[0], n, 0, CV_COUNTER_CLOCKWISE, &hull[0], &hullsize );
+
+		//debug draw
+		//for (int i=0; i<hullsize; i++) {
+		//	int x = contour[hull[i]].x;
+		//	int y = contour[hull[i]].y;
+		//	output[x+w*y] = 255;
+		//}
+
+		//get convex contour
+		vector<CvPoint> convex(hullsize);
+		for (int i=0; i<hullsize; i++) {
+			convex[i] = contour[hull[i]];
+		}
+
+		//draw to output
+		ofxCvGrayscaleImage img;
+		img.setUseTexture(false);
+		img.allocate( w, h );
+		img.set(0);
+		cvFillConvexPoly(img.getCvImage(), &convex[0], hullsize, cvScalar(255));
+    
+		unsigned char *imgData = img.getPixels();
+		for (int i=0; i<w*h; i++) {
+			output[i] = imgData[i];
+		}	
+	}
+}
+
+
+//-------------------------------------------------------------
+
 //-------------------------------------------------------------
