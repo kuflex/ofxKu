@@ -19,8 +19,8 @@ struct ofxKuRasterOptFlow {
 	void resizeFlowTo(int outW, int outH, vector<float> &outX, vector<float> &outY);
 
 	//params
-	int w();			//flow size
-	int h();
+	int w() { return w_; }			//flow size
+	int h() { return h_; }
 	int blur_input;		//input blurring (3)
 	int blur_data;		//data blurring - for computing mean value (7)
 	float eps_count;	//percent of pixels in area to use this for optical flow computing (0.05)
