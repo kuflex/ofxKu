@@ -19,7 +19,7 @@ void ofxKuDrawRaster(vector<float> &pix, int w, int h, float X, float Y, float W
 }
 
 //--------------------------------------------------------------
-void ofxKuOfGrayPixelsToRaster(ofPixels &pixels, vector<unsigned char> &pix, int w, int h) {
+void ofxKuOfGrayPixelsToRaster(ofPixels &pixels, vector<unsigned char> &pix, int &w, int &h) {
 	w = pixels.getWidth();
 	h = pixels.getHeight();
 	pix.resize(w*h);
