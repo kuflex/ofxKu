@@ -15,6 +15,10 @@ struct ofxKuPresetLooper {
 	void recall(int id);
 	void recall_random();	
 
+	bool started_preset()		{ return started_preset_; }
+	bool started_transition()	{ return started_transition_; }
+	void clear_started_preset_transition() { started_preset_ = started_transition_ = false; }
+
     ofxKuPresetLooper() {
 		enable0_ = 0;
 		loop_start0_ = 1;
@@ -76,6 +80,10 @@ protected:
 	float glob_timer_;	//global loop timer
 
 	void begin();
+	//---
+
+	bool started_preset_;
+	bool started_transition_;
 
 };
 

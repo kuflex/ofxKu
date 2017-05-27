@@ -4,6 +4,20 @@
 
 #include "ofMain.h"
 
+//mean value of the projection vector
+template <typename T>
+double ofxKuMathMeanProj(const vector<T> &input) {
+	int n = input.size();
+	if (n==0) return 0;
+	double M = 0;
+	double sum = 0;
+	for (int i=0; i<n; i++) {
+		M += i * input[i];
+		sum += input[i];
+	}
+	if (sum>0) M/=sum;
+	return M;
+}
 
 //median value of the projection vector
 template <typename T>

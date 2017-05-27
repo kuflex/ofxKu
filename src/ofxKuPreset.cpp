@@ -131,6 +131,11 @@ void ofxKuPreset::trans_to(int id, float trans_time) { //slow transition between
 }
 
 //--------------------------------------------------------------
+void ofxKuPreset::stop_transition() {
+	trans_ = false;
+}
+
+//--------------------------------------------------------------
 void ofxKuPreset::update_manual(float t) {	//instead update, call this for manual morphing between presets, t==0 - start, t==1 - end
 	t = t*t*(3-2*t);		//non-linear transform, such that F(0)=F'(0)=F'(1)=0, F(1)=1.
 	for (int i=0; i<var_.size(); i++) {

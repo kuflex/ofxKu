@@ -7,6 +7,9 @@ void ofxKuPresetLooper::setup(ofxKuPreset *preset) {
 	loop_pos_last_ = -1;
 	glob_timer_start_ = ofGetElapsedTimef();
 	glob_timer_=0;
+
+	started_preset_ = false;
+	started_transition_ = false;
 }
 
 //--------------------------------------------------------------
@@ -14,6 +17,9 @@ void ofxKuPresetLooper::update() {
 	float time = ofGetElapsedTimef();
 	float dt = ofClamp(time-time0_, 0.01, 0.1);
 	time0_ = time;
+
+	started_preset_ = false;
+	started_transition_ = false;
 
 	if (*enable_) {
 		glob_timer_ = time - glob_timer_start_;
@@ -39,6 +45,10 @@ void ofxKuPresetLooper::update() {
 		}
 		else {
 			*timer_ += dt;
+			if (*timer_-dt<0 && *timer_>=0) {
+				cout << "started_preset " << *loop_pos_ << endl;
+				started_preset_ = true;
+			}
 		}
 	}
 	//transition
@@ -47,9 +57,13 @@ void ofxKuPresetLooper::update() {
 		loop_pos_last_ = id;
 		if (*enable_) {
 			preset_->trans_to(id, *trans_time_); //if enabled - smooth transition
+			started_transition_ = true;
+			cout << "started_transition to " << id << endl;
 		}
 		else {
 			preset_->recall(id);				//if disabled - fast switch
+			started_preset_ = true;
+			cout << "started_preset " << id << endl;
 		}
 		*preset_num_ = id;
 	}
@@ -67,12 +81,14 @@ void ofxKuPresetLooper::recall(int id) {
 	*preset_num_ = id;
 	preset_->recall(id);
 	*timer_ = 0;
+	started_preset_ = true;
 }
 
 //--------------------------------------------------------------
 //jump to random preset from interval
 void ofxKuPresetLooper::recall_random() {
 	recall( ofRandom(*loop_start_, *loop_end_) );
+	started_preset_ = true;
 }
 
 //--------------------------------------------------------------
