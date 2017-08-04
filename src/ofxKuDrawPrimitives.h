@@ -34,6 +34,7 @@ public:
 	void pushRect( float x, float y, float w, float h, const ofColor &color );
 	void pushRect( float x, float y, float z, float w, float h, const ofColor &color );
 	void pushRect( const ofPoint &p, const ofPoint &w, const ofPoint &h, const ofColor &color );
+	void pushRect( const ofPoint &p1, const ofPoint &p2, const ofPoint &p3, const ofPoint &p4, const ofColor &color);
 	
 
 	//Textured rectangles

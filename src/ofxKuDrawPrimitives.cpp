@@ -228,6 +228,19 @@ void ofxKuRectRender::pushRect( const ofPoint &p, const ofPoint &w, const ofPoin
     colors[N++] = color;
 }
 
+//--------------------------------------------------------------
+void ofxKuRectRender::pushRect(const ofPoint &p1, const ofPoint &p2, const ofPoint &p3, const ofPoint &p4, const ofColor &color) {
+	check_size_colored();
+	points[N] = p1;
+	colors[N++] = color;
+	points[N] = p2;
+	colors[N++] = color;
+	points[N] = p3;
+	colors[N++] = color;
+	points[N] = p4;
+	colors[N++] = color;
+}
+
 
 //--------------------------------------------------------------
 void ofxKuRectRender::pushRect( const ofPoint &p, const ofPoint &w, const ofPoint &h,
