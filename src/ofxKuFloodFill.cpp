@@ -2,15 +2,8 @@
 #include "ofxKuRaster.h"
 
 //--------------------------------------------------------------
-
-size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
-                 int x0, int y0, int search, int fillColor, vector<int> *outPoints) {
-	vector<int> *res = (outPoints)?outPoints:(new vector<int>());
-	res->clear();
-	if (input[x0+w*y0] != search) return 0;
-    res->push_back(x0 + w*y0);
-    input[x0 + w*y0] = fillColor;
-
+//sv=4 or 8 - connectivity of pixels
+vector<int> ofxKuRoseOfWinds(int sv, int w) {
 	vector<int> rose(sv);
 	rose[0] = 1;
 	rose[1] = -1;
@@ -22,7 +15,19 @@ size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
 		rose[6] = -1 + w;
 		rose[7] = -1 - w;
 	}
+	return rose;
+}
 
+//--------------------------------------------------------------
+size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
+                 int x0, int y0, int search, int fillColor, vector<int> *outPoints) {
+	vector<int> *res = (outPoints)?outPoints:(new vector<int>());
+	res->clear();
+	if (input[x0+w*y0] != search) return 0;
+    res->push_back(x0 + w*y0);
+    input[x0 + w*y0] = fillColor;
+
+	vector<int> rose = ofxKuRoseOfWinds(sv, w);
 
     size_t begin = 0;
     while (begin < res->size()) {
@@ -33,23 +38,13 @@ size_t ofxKuFloodFill(vector<unsigned char> &input, int w, int h, int sv,
         begin++;
 		for (int i=0; i<sv; i++) {
 			int q = p+rose[i];
-			if (q>=0 && q<w*h && input[q] == search) {
+			int x = q % w;
+			int y = q / w;
+			if (x >= 0 && x < w && y >= 0 && y < h && input[q] == search) {
 				res->push_back(q);
 				input[q] = fillColor;
 			}
 		}
-
-        /*for (int y = py - 1; y <= py + 1; y++)  {
-            for (int x = px - 1; x <= px + 1; x++) {
-                if (x >= 0 && x < w && y >= 0 && y < h
-                        && (sv==8 || x == px || y == py)
-                        && input( x y ) == search ) {
-                    res.push_back( int2(x,y) );
-                    input.pixel( x, y ) = fillColor;
-                }
-
-            }
-        }*/
     }
 	int n = res->size();
     if ( !outPoints ) { delete res; }
@@ -77,6 +72,96 @@ void ofxKuRasterBlobsFilter(vector<unsigned char> &input, vector<unsigned char> 
 				}
 			}
 		}
+	}
+}
+
+//--------------------------------------------------------------
+//Find blobs with area in the given range and also sum(field values over blob) in the given range
+void ofxKuBlobDetectInField(vector<int> &field, int w, int h, const ofxKuBlobDetectorParams &params, vector<ofxKuBlob> &blobs) {
+	
+	vector<int> rose = ofxKuRoseOfWinds(params.sv, w);
+
+	//scan
+	vector<unsigned char> mask(w*h, 1);  //TODO here is memory allocation, please declare as static to works faster
+	vector<int> res;
+	for (int Y = 0; Y < h; Y++) {
+		for (int X = 0; X < w; X++) {
+			int I = X + w*Y;
+			if (field[I] > 0 && mask[I]) {
+				mask[I] = 0;
+				int sum = field[I];
+				res.clear();
+				res.push_back(I);
+
+				size_t begin = 0;
+				while (begin < res.size()) {
+					int p = res[begin];
+					begin++;
+					for (int i = 0; i<params.sv; i++) {
+						int q = p + rose[i];
+						int x = q % w;
+						int y = q / w;
+						if (x >= 0 && x < w && y >= 0 && y < h && mask[q]) {
+							res.push_back(q);
+							mask[q] = 0;
+							sum += field[q];
+						}
+					}
+				}
+				if ((res.size() >= params.min_blob_area || params.min_blob_area == -1)
+					&& (res.size() <= params.max_blob_area || params.max_blob_area == -1)
+					&& (sum >= params.min_count_in_blob || params.min_count_in_blob == -1)
+					&& (sum <= params.max_count_in_blob || params.max_count_in_blob == -1)
+					) {
+					blobs.push_back(ofxKuBlob());
+					ofxKuBlob &blob = blobs[blobs.size() - 1];
+					blob.w = w;
+					blob.h = h;
+					blob.pnt = res;
+					blob.Sum = sum;
+				}
+			}
+		}
+	}
+
+}
+
+
+//--------------------------------------------------------------
+ofPoint ofxKuBlob::center_mass() {
+	double X = 0;
+	double Y = 0;
+	int n = pnt.size();
+	for (int i = 0; i < n; i++) {
+		X += pnt[i] % w;
+		Y += pnt[i] / w;
+	}
+	if (n) {
+		X /= n;
+		Y /= n;
+	}
+	return ofPoint(X, Y);
+}
+
+//--------------------------------------------------------------
+float ofxKuBlob::rad(ofPoint center) {
+	double R = 0;
+	int n = pnt.size();
+	for (int i = 0; i < n; i++) {
+		int x = pnt[i] % w;
+		int y = pnt[i] / w;
+		R = max(R, sqrt(fabs(x*x + y*y)));
+	}
+	return R;
+}
+
+//--------------------------------------------------------------
+void ofxKuBlob::draw_to_raster(vector<unsigned char> &raster, unsigned char value) {
+	int n = pnt.size();
+	for (int i = 0; i < n; i++) {
+		int x = pnt[i] % w;
+		int y = pnt[i] / w;
+		raster[x + w*y] = value;
 	}
 }
 
