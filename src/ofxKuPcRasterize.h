@@ -5,6 +5,7 @@
 #include "ofMain.h"
 #include "ofxKuFloodFill.h"
 
+
 struct ofxKuPcRasterize {	
 	//projection to Z, raster contains number of points
 	static void rasterize_z_count(vector<ofPoint> &points, ofPoint &bound0, ofPoint &bound1,

@@ -27,19 +27,25 @@ void ofxKuPcRasterize::rasterize_z_count(vector<ofPoint> &points, ofPoint &bound
 void ofxKuPcRasterize::get_blobs(vector<ofPoint> &points, ofPoint bound0, ofPoint bound1, const ofxKuBlobDetectorParams &params,
 	int raster_w, int raster_h, vector<unsigned char> &raster_out, vector<ofxKuBlob> &blobs) {
 
+	blobs.clear();
+
 	int w = raster_w;
 	int h = raster_h;
 	vector<int> field(w*h);				//TODO here is memory allocation, please declare as static to works faster
 	rasterize_z_count(points, bound0, bound1, raster_w, raster_h, field);
-	
-	ofxKuBlobDetectInField(field, w, h, params, blobs);
 
 	raster_out.resize(w*h);
+	fill(raster_out.begin(), raster_out.end(), 0);
+	//for (int i = 0; i < w*h; i++) {	//test of raw rasterization
+	//	raster_out[i] = (field[i] > 0) ? 255 : 0;
+	//}
+
+	ofxKuBlobDetectInField(field, w, h, params, blobs);
+
 	//draw blobs
 	for (int i = 0; i < blobs.size(); i++) {
 		blobs[i].draw_to_raster(raster_out, 255);
 	}	
-
 }
 
 //--------------------------------------------------------------

@@ -101,7 +101,7 @@ void ofxKuBlobDetectInField(vector<int> &field, int w, int h, const ofxKuBlobDet
 						int q = p + rose[i];
 						int x = q % w;
 						int y = q / w;
-						if (x >= 0 && x < w && y >= 0 && y < h && mask[q]) {
+						if (x >= 0 && x < w && y >= 0 && y < h && field[q] > 0 && mask[q]) {
 							res.push_back(q);
 							mask[q] = 0;
 							sum += field[q];
@@ -145,12 +145,12 @@ ofPoint ofxKuBlob::center_mass() {
 
 //--------------------------------------------------------------
 float ofxKuBlob::rad(ofPoint center) {
-	double R = 0;
+	float R = 0;
 	int n = pnt.size();
 	for (int i = 0; i < n; i++) {
 		int x = pnt[i] % w;
 		int y = pnt[i] / w;
-		R = max(R, sqrt(fabs(x*x + y*y)));
+		R = max(R, ofDist(x, y, center.x, center.y));
 	}
 	return R;
 }
