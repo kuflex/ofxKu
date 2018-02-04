@@ -6,8 +6,15 @@
 
 void ofxKuLoadObjFile( ofMesh &mesh, string fileName, bool useTex,
                    bool setupNormals, bool normalize,
-                   bool separateFaces, bool shuffle, int texW, int texH,
-				   bool caching_to_ply = true);
+                   bool separateFaces, bool shuffle, int texW, int texH//,
+//				   bool caching_to_ply = true
+);
+
+
+void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals, 
+	bool textured, string mtl_file ="", int texW=0, int texH=0
+);		//sets normals and so change mesh!
+
 
 void ofxKuSetNormals( ofMesh &mesh );
 

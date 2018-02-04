@@ -1,7 +1,7 @@
 #include "ofxKuFileTime.h"
 
 //--------------------------------------------------------------
-bool ofxKuFileTime::isNewerThan(string fileName1, string fileName2) {
+/*bool ofxKuFileTime::isNewerThan(string fileName1, string fileName2) {
 	if (ofFile::doesFileExist(fileName1) && ofFile::doesFileExist(fileName2)) {
 		ofFile file1(fileName1, ofFile::ReadOnly, true);
 		ofFile file2(fileName2, ofFile::ReadOnly, true);
@@ -11,7 +11,7 @@ bool ofxKuFileTime::isNewerThan(string fileName1, string fileName2) {
 		return (created1 > created2);
 	}
 	return true;
-}
+}*/
 
 //--------------------------------------------------------------
 /*bool Filetime_is_file_older_hours(string fileName, int hours) {

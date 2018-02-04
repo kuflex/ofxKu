@@ -11,14 +11,9 @@ struct ofxKuPcRasterize {
 	static void rasterize_z_count(vector<ofPoint> &points, ofPoint &bound0, ofPoint &bound1,
 		int raster_w, int raster_h, vector<int> &raster_out);
 
-
-
-
 	//binary projection to Z. Compute raster and blobs	
 	static void get_blobs(vector<ofPoint> &points, ofPoint bound0, ofPoint bound1, const ofxKuBlobDetectorParams &params,
 		int raster_w, int raster_h, vector<unsigned char> &raster_out, vector<ofxKuBlob> &blobs);
-
-
 
 };
 
