@@ -1,5 +1,6 @@
 ﻿#include "ofxKuFloodFill.h"
-#include "ofxKuRaster.h"
+#include "ofxKuRasterArithmetics.h"
+//#include "ofxKuRaster.h"
 
 //--------------------------------------------------------------
 //sv=4 or 8 - connectivity of pixels

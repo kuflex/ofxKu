@@ -16,6 +16,8 @@ void ofxKuSaveObjFile(ofMesh &mesh, string fileName, bool setupNormals,
 );		//sets normals and so change mesh!
 
 
+void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out);	//for triangle mesh
+
 void ofxKuSetNormals( ofMesh &mesh );
 
 //shuffle vertices and triangles

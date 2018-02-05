@@ -49,4 +49,31 @@ void ofxKuPcRasterize::get_blobs(vector<ofPoint> &points, ofPoint bound0, ofPoin
 }
 
 //--------------------------------------------------------------
+//refilter point cloud and make points back to coordinate system, with z=0
+void ofxKuPcRasterize::refilter_z(vector<ofPoint> &points, ofPoint bound0, ofPoint bound1, const ofxKuBlobDetectorParams &params,
+	int raster_w, int raster_h, vector<ofPoint> &points_out) {
+
+	points_out.clear();
+	if (raster_w <= 0 || raster_h <= 0) return;
+
+	vector<unsigned char> raster_out;
+	vector<ofxKuBlob> blobs;
+
+	get_blobs(points, bound0, bound1, params, raster_w, raster_h, raster_out, blobs);
+	
+
+	float kx = (bound1.x - bound0.x) / raster_w;
+	float ky = (bound1.y - bound0.y) / raster_h;
+
+	for (int y=0; y<raster_h; y++) {
+		for (int x=0; x<raster_w; x++) {
+			if (raster_out[x+raster_w*y] > 0) {
+				points_out.push_back(ofPoint(bound0.x + kx * x, bound0.y + ky * y, 0));
+			}
+		}
+	}
+
+}
+
+//--------------------------------------------------------------
  

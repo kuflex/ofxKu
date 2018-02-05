@@ -300,5 +300,36 @@ void ofxKuSetNormals(ofMesh &mesh) {
 }
 
 //--------------------------------------------------------
+void ofxKuCreateWireframe(ofMesh &mesh, ofMesh &mesh_out) { //for triangle mesh
+
+	vector<ofPoint> &v = mesh.getVertices();
+	int n = v.size();
+
+	vector<GLuint> &ind = mesh.getIndices();
+	int m = ind.size() / 3;
+
+	mesh_out = mesh;
+	mesh_out.clearIndices();
+
+	for (int i = 0; i < m; i++) {
+		int i1 = ind[i * 3];
+		int i2 = ind[i * 3 + 1];
+		int i3 = ind[i * 3 + 2];
+		mesh_out.addIndex(i1);
+		mesh_out.addIndex(i2);
+		mesh_out.addIndex(i2);
+
+		mesh_out.addIndex(i2);
+		mesh_out.addIndex(i3);
+		mesh_out.addIndex(i3);
+
+		mesh_out.addIndex(i3);
+		mesh_out.addIndex(i1);
+		mesh_out.addIndex(i1);
+	}
+
+}
+
+//--------------------------------------------------------
 
 
