@@ -6,7 +6,7 @@
 
 template <typename T>
 void ofxKuValueSmooth(T &value, T target, float smooth) {
-    value += (target - value) * smooth;
+    value += (target - value) * (1-smooth);
 }
 
 
