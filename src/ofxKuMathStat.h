@@ -37,3 +37,18 @@ double ofxKuMathMedianProj(const vector<T> &input) {
 	return n-1;
 }
 
+
+//argmax, returns first index where maximal value is achieved
+template <typename T>
+int ofxKuArgMax(const vector<T> &input) {
+	if (input.empty()) return 0;
+	int j = 0;
+	T V = input[0];
+	for (int i = 1; i < input.size(); i++) {
+		if (input[i] > V) {
+			j = i;
+			V = input[i];
+		}
+	}
+	return j;
+}
