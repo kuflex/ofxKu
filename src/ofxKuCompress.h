@@ -2,7 +2,8 @@
 
 //RLE compression
 
-#include "ofMain.h"
+#include <vector>
+using namespace std;
 
 //RLE compression for masks - zero values are compressed
 //if v==0, then 0,count(0..255)
