@@ -1,4 +1,4 @@
-#include "ofxKuValueProbability.h"
+#include "ofxKuProbability.h"
 #include "ofxKuFile.h"
 
 //--------------------------------------------------------------
