@@ -3,9 +3,11 @@
 //--------------------------------------------------------------
 //projection to Z, raster contains number of points
 void ofxKuPcRasterize::rasterize_z_count(vector<ofPoint> &points, ofPoint &bound0, ofPoint &bound1,
-	int raster_w, int raster_h, vector<int> &raster_out) {
+	int raster_w, int raster_h, vector<int> &raster_out, bool fill_by_zeros) {
 	raster_out.resize(raster_w * raster_h);
-	fill(raster_out.begin(), raster_out.end(), 0);
+	if (fill_by_zeros) {
+		fill(raster_out.begin(), raster_out.end(), 0);
+	}
 
 	if (bound1.x - bound0.x <= 0 || bound1.y - bound0.y <= 0) return;
 
