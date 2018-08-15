@@ -61,18 +61,23 @@ void ofxKuGraph::draw(float X, float Y, float W, float H,
 	int n = data.size();
 	if (n >= 2) {
 		float scl = 1;
+		float shift = 0;
 		if (normalize) {
+			float minn = get_min();
 			float maxx = get_max();
-			if (maxx > 0.000001) scl = 1.0 / maxx;
+			float delta = maxx - minn;
+			if (delta <= 0.0000001) maxx += 1;
+			shift = -minn;
+			scl = 1.0 / (maxx - minn);
 		}
 		//scaling
 		ofTranslate(0, H);
-		ofScale(W / (n - 1), -H*scl);
+		ofScale(W / (n - 1), -H/**scl*/);
 
 
 		ofSetColor(pen);
 		for (int i = 0; i < n-1; i++) {
-			ofLine(i, data[i], i + 1, data[i + 1]);
+			ofLine(i, (data[i]+shift)*scl, i + 1, (data[i + 1]+shift)*scl);
 		}
 	}
 
@@ -91,8 +96,9 @@ void ofxKuGraph::push(float value) {
 
 //--------------------------------------------------------------
 float ofxKuGraph::get_min() {
-	float v = 1;
-	for (int i = 0; i < data.size(); i++) {
+	if (data.empty()) return 0;
+	float v = data[0];
+	for (int i = 1; i < data.size(); i++) {
 		v = min(v, data[i]);
 	}
 	return v;
@@ -100,8 +106,9 @@ float ofxKuGraph::get_min() {
 
 //--------------------------------------------------------------
 float ofxKuGraph::get_max() {
-	float v = 0;
-	for (int i = 0; i < data.size(); i++) {
+	if (data.empty()) return 0;
+	float v = data[0];
+	for (int i = 1; i < data.size(); i++) {
 		v = max(v, data[i]);
 	}
 	return v;
