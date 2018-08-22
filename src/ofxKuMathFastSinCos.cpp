@@ -32,6 +32,34 @@ float ofxKuMathFastSinCos::get_cos(float a) {
 }
 
 //--------------------------------------------------------------
+float ofxKuMathFastSinCos::get_sin_raw(float a) {	//without interpolation
+	if (a < 0) {
+		a = fmodf(-a, M_TWO_PI) * size_ / M_TWO_PI;
+		return -sin_[int(a)];
+	}
+	a = fmodf(a, M_TWO_PI) * size_ / M_TWO_PI;
+	return sin_[int(a)];
+}
+
+//--------------------------------------------------------------
+float ofxKuMathFastSinCos::get_cos_raw(float a) {
+	a = fmodf(fabs(a), M_TWO_PI) * size_ / M_TWO_PI;
+	return cos_[int(a)];
+}
+
+
+//--------------------------------------------------------------
+float ofxKuMathFastSinCos::get_sin_raw_nowarp(float a) {
+	return sin_[int(a * size_ / M_TWO_PI)];
+}
+
+//--------------------------------------------------------------
+float ofxKuMathFastSinCos::get_cos_raw_nowarp(float a) {
+	return cos_[int(a * size_ / M_TWO_PI)];
+}
+
+
+//--------------------------------------------------------------
 
 
 
