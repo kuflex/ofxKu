@@ -2,26 +2,16 @@
 
 #include "ofMain.h"
 
-//Graph, working as storage with fixed history length
+//Fast sin/cos
 
-struct ofxKuGraph {
-	void setup(int capacity);
-	void save(string file_name = "");
-	void load(string file_name);
+struct ofxKuMathFastSinCos {
+	void setup(int table_size=1000);
+	float get_sin(float a);
+	float get_cos(float a);
 
-	void set_capacity(int capacity);
-	void draw(float X, float Y, float W, float H,
-		bool normalize = false,
-		const ofColor &pen = ofColor(255), 
-		const ofColor &background = ofColor(0),
-		const ofColor &frame = ofColor(64));
-	void push(float value);
-	vector<float> data;
-	int n_ = 0;
+	int size_ = 0;
+	vector<float> sin_;
+	vector<float> cos_;
 
-	float get_min();
-	float get_max();
-
-	string file_name_ = "";
 };
 

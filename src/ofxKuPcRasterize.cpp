@@ -26,6 +26,31 @@ void ofxKuPcRasterize::rasterize_z_count(vector<ofPoint> &points, ofPoint &bound
 }
 
 //--------------------------------------------------------------
+//projection to Y, raster contains number of points
+void ofxKuPcRasterize::rasterize_y_count(vector<ofPoint> &points, ofPoint &bound0, ofPoint &bound1,
+	int raster_w, int raster_h, vector<int> &raster_out, bool fill_by_zeros) {
+	raster_out.resize(raster_w * raster_h);
+	if (fill_by_zeros) {
+		fill(raster_out.begin(), raster_out.end(), 0);
+	}
+
+	if (bound1.x - bound0.x <= 0 || bound1.z - bound0.z <= 0) return;
+
+	float kx = raster_w / (bound1.x - bound0.x);
+	float kz = raster_h / (bound1.z - bound0.z);
+	for (int i = 0; i < points.size(); i++) {
+		ofPoint &p = points[i];
+		int X = int((p.x - bound0.x) * kx);
+		if (X >= 0 && X < raster_w) {
+			int Z = int((p.z - bound0.z) * kz);
+			if (Z >= 0 && Z < raster_h) {
+				raster_out[X + raster_w * Z]++;
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------
 void ofxKuPcRasterize::get_blobs(vector<ofPoint> &points, ofPoint bound0, ofPoint bound1, const ofxKuBlobDetectorParams &params,
 	int raster_w, int raster_h, vector<unsigned char> &raster_out, vector<ofxKuBlob> &blobs) {
 
