@@ -16,20 +16,19 @@ void ofxKuMathFastSinCos::setup(int table_size) {
 
 //--------------------------------------------------------------
 float ofxKuMathFastSinCos::get_sin(float a) {
-	if (size_ > 0) {
-		a = fmodf(a, M_TWO_PI) * size_ / M_TWO_PI;
-		return ofxKuInterpolate_1d(a, sin_, size_ + 1);
+	if (a < 0) {
+		a = fmodf(-a, M_TWO_PI) * size_ / M_TWO_PI;
+		return -ofxKuInterpolate_1d(a, sin_, size_ + 1);
 	}
-	else return 0;
+	a = fmodf(a, M_TWO_PI) * size_ / M_TWO_PI;
+	return ofxKuInterpolate_1d(a, sin_, size_ + 1);
 }
 
 //--------------------------------------------------------------
 float ofxKuMathFastSinCos::get_cos(float a) {
-	if (size_ > 0) {
-		a = fmodf(a, M_TWO_PI) * size_ / M_TWO_PI;
-		return ofxKuInterpolate_1d(a, cos_, size_ + 1);
-	}
-	else return 1;
+	if (a < 0) a = -a;
+	a = fmodf(a, M_TWO_PI) * size_ / M_TWO_PI;
+	return ofxKuInterpolate_1d(a, cos_, size_ + 1);
 }
 
 //--------------------------------------------------------------
