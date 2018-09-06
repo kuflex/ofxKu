@@ -123,4 +123,41 @@ void ofxKuDecompressRle(vector<unsigned short> &dataIn, vector<unsigned short> &
 	}
 }
 
+
+//--------------------------------------------------------------
+void ofxKuPackToBits(vector<unsigned char> &dataIn, vector<unsigned char> &dataOut) {
+	int size = dataIn.size();
+	int n = size / 8;
+	if (n * 8 < size) n++;
+
+	dataOut.resize(n);
+	for (int i = 0; i<n; i++) {
+		int I = i * 8;
+		int K = (8<=size - I)?8:(size-I);
+		int v = 0;
+		int d = 1;
+		for (int k = 0; k<K; k++) {
+			if (dataIn[I + k] > 0) {
+				v += d;
+			}
+			d *= 2;
+		}
+		dataOut[i] = v;
+	}
+}
+
+//--------------------------------------------------------------
+void ofxKuUnpackFromBits(vector<unsigned char> &dataIn, int sizeOut, vector<unsigned char> &dataOut) {
+	dataOut.resize(sizeOut);
+	int v = 0;
+	for (int i = 0; i<sizeOut; i++) {
+		if (i % 8 == 0) {
+			v = dataIn[i / 8];
+		}
+		dataOut[i] = (v % 2)*255;
+		v /= 2;
+	}
+}
+
+
 //--------------------------------------------------------------

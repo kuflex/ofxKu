@@ -24,3 +24,7 @@ void ofxKuCompressRle(vector<unsigned short> &dataIn, vector<unsigned short> &da
 //size - expected size
 void ofxKuDecompressRle(vector<unsigned short> &dataIn, vector<unsigned short> &dataOut, int size);
 
+
+//Pack to bits and unpack from bits - use for compressing binary masks before transmission
+void ofxKuPackToBits(vector<unsigned char> &dataIn, vector<unsigned char> &dataOut);
+void ofxKuUnpackFromBits(vector<unsigned char> &dataIn, int sizeOut, vector<unsigned char> &dataOut);
