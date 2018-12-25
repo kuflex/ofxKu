@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofxKuDrawRaster(vector<unsigned char> &pix, int w, int h, float X, float Y, float W, float H) {
-	if (pix.size() != w*h) return;
+	if (pix.size() != w*h || w*h <= 0) return;
 	ofTexture texture;
 	texture.loadData(&pix[0],w,h,GL_LUMINANCE);
 	texture.draw(X,Y,W,H);
@@ -10,7 +10,7 @@ void ofxKuDrawRaster(vector<unsigned char> &pix, int w, int h, float X, float Y,
 
 //--------------------------------------------------------------
 void ofxKuDrawRaster(vector<float> &pix, int w, int h, float X, float Y, float W, float H, float val0, float val1) {
-	if (pix.size() != w*h) return;
+	if (pix.size() != w*h || w*h <= 0) return;
 	vector<unsigned char> pix1(w*h);
 	for (int i=0; i<w*h; i++) {
 		pix1[i] = ofMap(pix[i],val0,val1,0,255,true);
